@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGL Test Suite</title>
+  <meta name="description" content="Local testing suite for NGL rate-limit research" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/public/style.css" />
+</head>
+<body>
+  <div class="grain"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">NGL</span>
+      <span class="brand-text">TEST SUITE</span>
+      <span class="brand-version">vercel</span>
+    </div>
+    <div class="topbar-right">
+      <span id="connection" class="conn">
+        <span class="dot"></span><span class="conn-text">checking…</span>
+      </span>
+      <button id="theme-toggle" class="icon-btn" title="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2 class="panel-title">Targets</h2>
+        <textarea id="usernames" placeholder="username1&#10;username2"></textarea>
+        <div class="hint">Satu per baris, atau pisah dengan koma</div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Messages</h2>
+        <textarea id="messages" placeholder="halo {kamu|lu}&#10;test {{index}}"></textarea>
+        <div class="hint">Spintax {a|b} + {{index}} {{username}} {{random}}</div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Batch</h2>
+        <div class="field-row">
+          <label>Per user</label>
+          <input type="number" id="count-per-user" value="1" min="1" max="20" />
+        </div>
+        <div class="field-row">
+          <label>Concurrency</label>
+          <input type="number" id="concurrency" value="10" min="1" max="30" />
+        </div>
+        <div class="field-row">
+          <label>Retry</label>
+          <input type="number" id="retry" value="2" min="0" max="4" />
+        </div>
+        <div class="field-row">
+          <label>Timeout</label>
+          <input type="number" id="timeout" value="10" min="1" max="30" />
+        </div>
+        <div class="field-row">
+          <label>Device</label>
+          <select id="device">
+            <option value="pool" selected>pool</option>
+            <option value="single">single</option>
+            <option value="random">random</option>
+          </select>
+        </div>
+        <div class="hint">Max 50 job per request (batas Vercel)</div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Flags</h2>
+        <label class="check">
+          <input type="checkbox" id="dry-run" checked /> Dry-run (simulasi)
+        </label>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Controls</h2>
+        <div class="btn-row">
+          <button id="btn-start" class="btn btn-primary">▶ Send Batch</button>
+          <button id="btn-clear" class="btn">✕ Clear</button>
+        </div>
+        <div class="btn-row secondary">
+          <button id="btn-export-json" class="btn btn-ghost">↓ JSON</button>
+          <button id="btn-export-csv" class="btn btn-ghost">↓ CSV</button>
+        </div>
+        <div class="hint kb">Ctrl+Enter = kirim · Esc = clear log</div>
+      </section>
+    </aside>
+
+    <section class="content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total</div>
+          <div class="stat-value" data-stat="total">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Success</div>
+          <div class="stat-value success" data-stat="success">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Failed</div>
+          <div class="stat-value error" data-stat="failed">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Elapsed</div>
+          <div class="stat-value mono" data-stat="elapsed">0<span class="unit">ms</span></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="card-head">
+          <h3>Batch history</h3>
+          <div class="legend">
+            <span class="lg lg-success"></span> success
+            <span class="lg lg-error"></span> failed
+          </div>
+        </div>
+        <canvas id="timeline" height="120"></canvas>
+      </div>
+
+      <div class="log-card">
+        <div class="card-head">
+          <h3>Response</h3>
+          <button id="btn-clear-log" class="icon-btn small" title="Clear">✕</button>
+        </div>
+        <div id="log" class="log-stream"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toasts" class="toasts"></div>
+
+  <footer class="footer">
+    ⚠ For local/educational testing only — unauthorized spam violates NGL ToS.
+  </footer>
+
+  <script src="/public/app.js"></script>
+</body>
+</html>
